@@ -1,18 +1,34 @@
 const canvas = document.getElementById('draw');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight * 0.9;
+let line_w = 10;
+let range_input = document.getElementById("range");
+function setStroke() {
+    line_w = this.value;
+    ctx.lineWidth = line_w;
+}
+range_input.addEventListener('input', setStroke);
 
-ctx.strokeStyle = '#045';
+
+
+let w_and_h = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 0.88;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.lineWidth = line_w;
+    ctx.strokeStyle = '#045';
+
+}
+w_and_h();
+window.onresize = () => w_and_h();
+
 let color_input = document.getElementById("setColor_inp");
 function set_color() {
     ctx.strokeStyle = this.value;
 };
 color_input.addEventListener('input', set_color);
-ctx.lineJoin = 'round';
-ctx.lineCap = 'round';
-ctx.lineWidth = 30;
+
 let drawingNow = false;
 // start of drawing and end
 let lastX = 0;

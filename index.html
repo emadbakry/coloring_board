@@ -10,10 +10,23 @@
 </head>
 <body>
     <section id="board">
-        <canvas id="draw" width="350px" height="90vh"></canvas>
-        <div class="setColor">
-            <label for="setColor_inp">Select Color</label>
+        <canvas id="draw" width="350px" height="500px"></canvas>
+        <div class="control">
+            <label for="setColor_inp" class="color_lable">Select Color :</label>
             <input id="setColor_inp" type="color" name="setColor" value="#444">
+            <div class="range">
+                <label for="range">Width :</label>
+                <div class="range_inp">
+                    <input type="range" id="range" list="ranges" min="1" max="100">
+                <datalist id="ranges">
+                 <option value="1" label="1"></option>
+                 <option value="25" label="25"></option>
+                 <option value="50" label="50"></option>
+                 <option value="75" label="75"></option>
+                 <option value="100" label="100"></option>
+                </datalist>
+                </div>
+            </div>
         </div>
     </section>
     <script src="index.js"></script>

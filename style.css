@@ -5,15 +5,42 @@ body {
     position: relative;
 }
 
-.setColor {
-    position: absolute;
-    left: 10px;
-    bottom: 20%;
+.control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 2px solid #434fd3;
 }
-.setColor label {
+.control label {
     display: block;
+}
+.color_lable {
+    margin-right: 15px;
 }
 #setColor_inp {
     display: block;
-    margin-top: 10px;
+    margin-right: 20px;
+}
+label {
+    pointer-events: none;
+}
+.range {
+    margin-left:20px;
+}
+input#range {
+    width: 300px;
+}
+datalist {
+  display: flex;
+  justify-content: space-between;
+  writing-mode: horizontal-tb;
+  width: 310px;
+}
+@media only screen and (max-width:767px) {
+    input#range {
+    width: 130px;
+}
+    datalist {
+      width: 140px;
+    }
 }
