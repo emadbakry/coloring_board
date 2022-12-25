@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+}
+#board {
+    position: relative;
+}
+
+.setColor {
+    position: absolute;
+    left: 10px;
+    bottom: 20%;
+}
+.setColor label {
+    display: block;
+}
+#setColor_inp {
+    display: block;
+    margin-top: 10px;
+}
