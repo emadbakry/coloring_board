@@ -25,6 +25,8 @@ body {
 }
 label {
     pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 .range {
     margin-left:20px;

@@ -40,19 +40,18 @@ let draw = (e)=> {
         ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.lineTo(e.clientX, e.clientY);
         ctx.stroke();
-        [lastX, lastY] = [e.offsetX, e.offsetY];
+        [lastX, lastY] = [e.clientX, e.clientY];
     } 
 }
 canvas.addEventListener('mousedown', (e) => {
     drawingNow = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    [lastX, lastY] = [e.clientX, e.clientY];
 });
 canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
-    document.body.innerHTML += " hello, touch is OK";
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    [lastX, lastY] = [e.clientX, e.clientY];
 });
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('touchmove', draw);
