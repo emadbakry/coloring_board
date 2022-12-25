@@ -9,11 +9,14 @@ function setStroke() {
 }
 range_input.addEventListener('input', setStroke);
 
-
+let control_height = document.querySelector('.control').scrollHeight;
+if (typeof control_height != "number") {
+    control_height = 50;
+};
 
 let w_and_h = () => {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 0.88;
+    canvas.height = window.innerHeight - (control_height);
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.lineWidth = line_w;
@@ -29,7 +32,9 @@ function set_color() {
 };
 color_input.addEventListener('input', set_color);
 
-let drawingNow = false;
+var drawingNow = false;
+// var drawingNow = "createTouch" in document || "ontouchstart" in window;
+
 // start of drawing and end
 let lastX = 0;
 let lastY = 0; 
@@ -40,19 +45,20 @@ let draw = (e)=> {
         ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.clientX, e.clientY);
+        ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
-        [lastX, lastY] = [e.clientX, e.clientY];
+        [lastX, lastY] = [e.offsetX, e.offsetY];
     } 
 }
 canvas.addEventListener('mousedown', (e) => {
     drawingNow = true;
-    [lastX, lastY] = [e.clientX, e.clientY];
+    [lastX, lastY] = [e.offsetX, e.offsetY];
 });
 canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.clientX, e.clientY];
 });
+
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('mouseup', ()=> drawingNow = false);
@@ -60,4 +66,19 @@ canvas.addEventListener('touchend', ()=> drawingNow = false);
 canvas.addEventListener('mouseout', () => drawingNow = false);
 canvas.addEventListener('touchcancel', () => drawingNow = false);
 
+
+// save as png
+let save_btn = document.querySelector(".save_btn");
+function save_canva() {
+    savecanvas(ctx,'sketch','png')
+}
+save_btn.addEventListener('click', () => {
+    let dataUrl = canvas.toDataURL();
+    console.log(dataUrl)
+    let dl_img = document.querySelector(".dl_img");
+    dl_img.href = dataUrl;
+    setTimeout(() => {
+        dl_img.click();
+    }, 1000);
+});
 
