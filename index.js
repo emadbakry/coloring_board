@@ -51,6 +51,7 @@ canvas.addEventListener('mousedown', (e) => {
 });
 canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
+    document.body.innerHTML += " hello, touch is OK";
     [lastX, lastY] = [e.offsetX, e.offsetY];
 });
 canvas.addEventListener('mousemove', draw);

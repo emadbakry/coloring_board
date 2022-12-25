@@ -10,6 +10,8 @@ body {
     justify-content: center;
     align-items: center;
     border-top: 2px solid #434fd3;
+    padding-left: 15px;
+    flex-wrap: wrap;
 }
 .control label {
     display: block;
