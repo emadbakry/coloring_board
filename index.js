@@ -33,7 +33,15 @@ canvas.addEventListener('mousedown', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
 });
+canvas.addEventListener('touchstart', (e) => {
+    drawingNow = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+});
 canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('mouseup', ()=> drawingNow = false);
-canvas.addEventListener('mouseout', ()=> drawingNow = false);
+canvas.addEventListener('touchend', ()=> drawingNow = false);
+canvas.addEventListener('mouseout', () => drawingNow = false);
+canvas.addEventListener('touchcancel', () => drawingNow = false);
+
 
