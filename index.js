@@ -89,7 +89,7 @@ canvas.addEventListener(
   false
 );
 let draw = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     e.stopPropagation();
     if (drawingNow) {
         // console.log(e)
@@ -102,13 +102,13 @@ let draw = (e) => {
     } 
 }
 
-window.requestAnimFrame = (function (callback) {
+window.requestAnimationFrame = (function (callback) {
   return (
     window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimaitonFrame ||
+    window.requestAnimationFrame ||
+    window.requestAnimationFrame ||
+    window.requestAnimationFrame ||
+    window.requestAnimationFrame ||
     function (callback) {
       window.setTimeout(callback, 1000 / 60);
     }
@@ -133,7 +133,7 @@ canvas.addEventListener('touchcancel', () => drawingNow = false);
 // save as png
 let save_btn = document.querySelector(".save_btn");
 function save_canva() {
-    savecanvas(ctx, 'sketch', 'png');
+    save_canva(ctx, 'sketch', 'png');
 }
 
 save_btn.addEventListener('click', () => {
