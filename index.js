@@ -51,7 +51,10 @@ var drawingNow = false;
 let lastX = 0;
 let lastY = 0; 
 let hue = 0;
-let draw = (e)=> {
+
+function draw(e) {
+    e.preventDefault();
+    e.stopPropagation();
     if (drawingNow) {
         // console.log(e)
         ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
@@ -71,7 +74,24 @@ canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.clientX, e.clientY];
 });
-
+// mobile
+    var start = function (e) {
+      e = e.originalEvent;
+      ctx.beginPath();
+      x = e.changedTouches[0].pageX;
+      y = e.changedTouches[0].pageY - 44;
+      ctx.moveTo(x, y);
+    };
+    var move = function (e) {
+      e.preventDefault();
+      e = e.originalEvent;
+      x = e.changedTouches[0].pageX;
+      y = e.changedTouches[0].pageY - 44;
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    };
+    canvas.addEventListener("touchstart", start);
+    canvas.addEventListener("touchmove", move);	
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('mouseup', ()=> drawingNow = false);
