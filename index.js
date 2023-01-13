@@ -52,6 +52,12 @@ let lastX = 0;
 let lastY = 0; 
 let hue = 0;
 
+// mobile
+canvas.addEventListener('touchmove',function (e) {
+    var touch = e.touches[0];
+    [my_x, my_y] = [touch.pageX, touch.pageY];
+})
+
 function draw(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -60,7 +66,9 @@ function draw(e) {
         ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
+        var my_x = e.offsetX;
+        var my_y = e.offsetY;
+        ctx.lineTo(my_x, my_y);
         ctx.stroke();
         [lastX, lastY] = [e.offsetX, e.offsetY];
     } 
@@ -74,11 +82,7 @@ canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.clientX, e.clientY];
 });
-// mobile
-canvas.addEventListener('touchmove',function (e) {
-    var touch = e.touches[0];
-    [lastX, lastY] = [touch.clientX, touch.clientY];
-})
+
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('mouseup', ()=> drawingNow = false);
