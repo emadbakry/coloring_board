@@ -102,6 +102,18 @@ let draw = (e) => {
     } 
 }
 
+window.requestAnimFrame = (function (callback) {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimaitonFrame ||
+    function (callback) {
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
+})();
 canvas.addEventListener('mousedown', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
