@@ -65,8 +65,8 @@ canvas.addEventListener(
   false
 );
 let draw = (e) => {
-    e.preventDefault();
-    // e.stopPropagation();
+    // e.preventDefault();
+    e.stopPropagation();
     if (drawingNow) {
         // console.log(e)
         ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
