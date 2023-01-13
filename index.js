@@ -1,138 +1,51 @@
-const canvas = document.getElementById('draw');
-const ctx = canvas.getContext('2d');
+var clearButton = document.querySelector(".reset_btn button");
+var canvascontainer = document.getElementById("board");
+var canvas = document.getElementById("draw");
+var context = canvas.getContext("2d");
+var radius = (canvascontainer.clientWidth + canvascontainer.clientHeight) / 150;
+var dragging = false;
 
-let line_w = 10;
-let range_input = document.getElementById("range");
-function setStroke() {
-    line_w = this.value;
-    ctx.lineWidth = line_w;
+function getMousePosition(e) {
+  var mouseX = ((e.offsetX * canvas.width) / canvas.clientWidth) | 0;
+  var mouseY = ((e.offsetY * canvas.height) / canvas.clientHeight) | 0;
+  return { x: mouseX, y: mouseY };
 }
-range_input.addEventListener('input', setStroke);
 
-let stored_img = document.querySelector(".stored_img");
-if (sessionStorage.getItem("save_canva_Emad")) {
-  let img_stored_data = sessionStorage.getItem("save_canva_Emad");
-  stored_img.setAttribute("src", img_stored_data);
+context.mozImageSmoothingEnabled = false;
+context.imageSmoothingEnabled = false;
+
+canvas.width = 1280;
+canvas.height = 920;
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+
+/* CLEAR CANVAS */
+function clearCanvas() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
 }
-let control_height = document.querySelector('.control').scrollHeight;
-if (typeof control_height != "number") {
-    control_height = 50;
+
+clearButton.addEventListener("click", clearCanvas);
+
+var putPoint = function (e) {
+     e.preventDefault();
+     e.stopPropagation();
+  if (dragging) {
+    context.lineTo(getMousePosition(e).x, getMousePosition(e).y);
+    context.lineWidth = radius * 2;
+    context.stroke();
+    context.beginPath();
+    context.arc(
+      getMousePosition(e).x,
+      getMousePosition(e).y,
+      radius,
+      0,
+      Math.PI * 2
+    );
+    context.fill();
+    context.beginPath();
+    context.moveTo(getMousePosition(e).x, getMousePosition(e).y);
+  }
 };
-let w_and_h = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - (control_height);
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.lineWidth = line_w;
-    ctx.strokeStyle = '#045';
-}
-w_and_h();
-let fix_resize = () => {
-    w_and_h();
-      setTimeout(() => {
-        ctx.drawImage(
-          stored_img,
-          0,
-          0,
-          window.innerWidth,
-          window.innerHeight - control_height
-        );
-      }, 0);
-}
-window.onresize = () => fix_resize();
-let color_input = document.getElementById("setColor_inp");
-function set_color() {
-    ctx.strokeStyle = this.value;
-};
-color_input.addEventListener('input', set_color);
-var drawingNow = false;
-// var drawingNow = "createTouch" in document || "ontouchstart" in window;
-// start of drawing and end
-let lastX = 0;
-let lastY = 0; 
-let hue = 0;
-let draw = (e) => {
-    if (drawingNow) {
-        // console.log(e)
-        ctx.strokeStyle = `hsl(#{hue}, 100%,50%)`;
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-    } 
-}
-
-canvas.addEventListener('mousedown', (e) => {
-    drawingNow = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
-});
-canvas.addEventListener('touchstart', (e) => {
-    drawingNow = true;
-    [lastX, lastY] = [e.clientX, e.clientY];
-});
-
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('touchmove', draw);
-canvas.addEventListener('mouseup', ()=> drawingNow = false);
-canvas.addEventListener('touchend', ()=> drawingNow = false);
-canvas.addEventListener('mouseout', () => drawingNow = false);
-canvas.addEventListener('touchcancel', () => drawingNow = false);
-
-// save as png
-let save_btn = document.querySelector(".save_btn");
-function save_canva() {
-    savecanvas(ctx, 'sketch', 'png');
-}
-
-save_btn.addEventListener('click', () => {
-    let dataUrl = canvas.toDataURL();
-    // console.log(dataUrl)
-    let dl_img = document.querySelector(".dl_img");
-    dl_img.href = dataUrl;
-    setTimeout(() => {
-        dl_img.click();
-    }, 1000);
-});
-
-// To prevent scrolling while touching canvas
-document.body.addEventListener("touchstart", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchend", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchmove", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-
-canvas.addEventListener(
-  "touchstart",
-  function (e) {
-    mousePos = getTouchPos(canvas, e);
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousedown", {
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    });
-    canvas.dispatchEvent(mouseEvent);
-  },
-  false
-);
-canvas.addEventListener(
-  "touchend",
-  function (e) {
-    var mouseEvent = new MouseEvent("mouseup", {});
-    canvas.dispatchEvent(mouseEvent);
-  },
-  false
-);
 canvas.addEventListener(
   "touchmove",
   function (e) {
@@ -145,27 +58,61 @@ canvas.addEventListener(
   },
   false
 );
-function getTouchPos(canvasDom, touchEvent) {
-  var rect = canvasDom.getBoundingClientRect();
-  return {
-    x: touchEvent.touches[0].clientX - rect.left,
-    y: touchEvent.touches[0].clientY - rect.top
-  };
+var engage = function (e) {
+  dragging = true;
+  putPoint(e);
+};
+var disengage = function () {
+  dragging = false;
+  context.beginPath();
+};
+
+canvas.addEventListener("mousedown", engage);
+canvas.addEventListener("mousemove", putPoint);
+canvas.addEventListener("mouseup", disengage);
+document.addEventListener("mouseup", disengage);
+canvas.addEventListener("contextmenu", disengage);
+
+canvas.addEventListener("touchstart", engage, false);
+canvas.addEventListener("touchmove", putPoint, false);
+canvas.addEventListener("touchend", disengage, false);
+
+window.onresize = () => fix_resize();
+let color_input = document.getElementById("setColor_inp");
+function set_color() {
+  context.strokeStyle = this.value;
+}
+color_input.addEventListener("input", set_color);
+var drawingNow = false;
+
+// save as png
+let save_btn = document.querySelector(".save_btn");
+function save_canva() {
+  savecanvas(ctx, "sketch", "png");
 }
 
+save_btn.addEventListener("click", () => {
+  let dataUrl = canvas.toDataURL();
+  // console.log(dataUrl)
+  let dl_img = document.querySelector(".dl_img");
+  dl_img.href = dataUrl;
+  setTimeout(() => {
+    dl_img.click();
+  }, 1000);
+});
 
 let reset_bg = document.querySelector(".btns .reset_btn");
 let reset = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    sessionStorage.removeItem("save_canva_Emad");
-}
-reset_bg.addEventListener('click', reset);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sessionStorage.removeItem("save_canva_Emad");
+};
+reset_bg.addEventListener("click", reset);
 setTimeout(() => {
-    ctx.drawImage(stored_img, 0, 0, stored_img.width, stored_img.height);
+//   context.drawImage(stored_img, 0, 0, stored_img.width, stored_img.height);
 }, 10);
 setInterval(() => {
-    stored_img.setAttribute("src", canvas.toDataURL());
-    sessionStorage.setItem("save_canva_Emad", canvas.toDataURL());
+//   stored_img.setAttribute("src", canvas.toDataURL());
+  sessionStorage.setItem("save_canva_Emad", canvas.toDataURL());
 }, 1000);
 
 // minifiy the code
