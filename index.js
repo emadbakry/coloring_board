@@ -52,43 +52,7 @@ let lastX = 0;
 let lastY = 0; 
 let hue = 0;
 
-canvas.addEventListener(
-  "touchstart",
-  function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousedown", {
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    });
-    canvas.dispatchEvent(mouseEvent);
-  },
-  false
-);
-canvas.addEventListener(
-  "touchend",
-  function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mouseup", {
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    });
-    canvas.dispatchEvent(mouseEvent);
-  },
-  false
-);
-canvas.addEventListener(
-  "touchmove",
-  function (e) {
-    var touch = e.touches[0];
-    var mouseEvent = new MouseEvent("mousemove", {
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    });
-    canvas.dispatchEvent(mouseEvent);
-  },
-  false
-);
-let draw = (e) => {
+function draw(e) {
     e.preventDefault();
     e.stopPropagation();
     if (drawingNow) {
@@ -102,18 +66,6 @@ let draw = (e) => {
     } 
 }
 
-window.requestAnimFrame = (function (callback) {
-  return (
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimaitonFrame ||
-    function (callback) {
-      window.setTimeout(callback, 1000 / 60);
-    }
-  );
-})();
 canvas.addEventListener('mousedown', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
@@ -122,7 +74,11 @@ canvas.addEventListener('touchstart', (e) => {
     drawingNow = true;
     [lastX, lastY] = [e.clientX, e.clientY];
 });
-
+// mobile
+canvas.addEventListener('touchmove',function (e) {
+    var touch = e.touches[0];
+    [lastX, lastY] = [touch.clientX, touch.clientY];
+})
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('touchmove', draw);
 canvas.addEventListener('mouseup', ()=> drawingNow = false);
