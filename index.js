@@ -102,13 +102,13 @@ let draw = (e) => {
     } 
 }
 
-window.requestAnimationFrame = (function (callback) {
+window.requestAnimFrame = (function (callback) {
   return (
     window.requestAnimationFrame ||
-    window.requestAnimationFrame ||
-    window.requestAnimationFrame ||
-    window.requestAnimationFrame ||
-    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimaitonFrame ||
     function (callback) {
       window.setTimeout(callback, 1000 / 60);
     }
@@ -133,7 +133,7 @@ canvas.addEventListener('touchcancel', () => drawingNow = false);
 // save as png
 let save_btn = document.querySelector(".save_btn");
 function save_canva() {
-    save_canva(ctx, 'sketch', 'png');
+    savecanvas(ctx, 'sketch', 'png');
 }
 
 save_btn.addEventListener('click', () => {
